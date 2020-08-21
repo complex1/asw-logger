@@ -5,9 +5,12 @@ export const SetLog = (log) => {
   const type = log.type || 'info'
   const msg = log.msg || log
   const ts = new Date().valueOf()
-
+  const newLogStr = JSON.stringify({ type, msg, time: time.toString() })
   let logStr = sessionStorage.getItem(type)
-  logStr = (logStr ? logStr + splitChar : '') + type + ':' + msg + ':' + ts.toString()
+  if(logStr === '') {
+    logStr = '[]'
+  }
+  logStr = logStr.slice(0, -1) + ',' + newLogStr + ']'
   sessionStorage.setItem(type, logStr)
 }
 
@@ -41,13 +44,8 @@ export const setErrorLog = (msg) => {
 
 const LogDM = (logArray = [], type = 'info') => {
   const logList = sessionStorage.getItem(type) ? sessionStorage.getItem(type).split(splitChar) : []
-  for (const i in logList) {
-    const local = logList[i].split(':')
-    logArray.push({
-      type: local[0],
-      msg: local[1],
-      time: parseInt(local[2])
-    })
+  for (const iterator of logList) {
+    logArray.push(iterator)
   }
   return logArray
 }
