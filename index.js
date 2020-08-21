@@ -52,7 +52,7 @@ const LogDM = (logArray = [], type = 'info') => {
   return logArray
 }
 
-export const getLog = (type = 'info', order = 1, from = new Date().valueOf(), to = 0) => {
+export const getLog = (type = 'all', order = 1, from = new Date().valueOf(), to = 0) => {
   var logArray = []
   if (Array.isArray(type)) {
     for (const i in type) {
