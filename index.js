@@ -5,9 +5,9 @@ export const SetLog = (log) => {
   const type = log.type || 'info'
   const msg = log.msg || log
   const ts = new Date().valueOf()
-  const newLogStr = JSON.stringify({ type, msg, time: time.toString() })
+  const newLogStr = JSON.stringify({ type, msg, time: ts.toString() })
   let logStr = sessionStorage.getItem(type)
-  if(logStr === '') {
+  if(logStr === null) {
     logStr = '[]'
   }
   logStr = logStr.slice(0, -1) + ',' + newLogStr + ']'
