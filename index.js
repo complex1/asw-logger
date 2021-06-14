@@ -1,4 +1,3 @@
-const splitChar = ';;'
 const logType = ['info', 'success', 'warning', 'error']
 
 export const SetLog = (log) => {
@@ -7,10 +6,12 @@ export const SetLog = (log) => {
   const ts = new Date().valueOf()
   const newLogStr = JSON.stringify({ type, msg, time: ts.toString() })
   let logStr = sessionStorage.getItem(type)
+  let isNull = false
   if(logStr === null) {
     logStr = '[]'
+    isNull = true
   }
-  logStr = logStr.slice(0, -1) + ',' + newLogStr + ']'
+  logStr = logStr.slice(0, -1) + (isNull ? '' : ',') + newLogStr + ']'
   sessionStorage.setItem(type, logStr)
 }
 
@@ -43,7 +44,7 @@ export const setErrorLog = (msg) => {
 }
 
 const LogDM = (logArray = [], type = 'info') => {
-  const logList = sessionStorage.getItem(type) ? sessionStorage.getItem(type).split(splitChar) : []
+  const logList = sessionStorage.getItem(type) ? JSON.parse(sessionStorage.getItem(type)) : []
   for (const iterator of logList) {
     logArray.push(iterator)
   }
@@ -63,7 +64,7 @@ export const getLog = (type = 'all', order = 1, from = new Date().valueOf(), to 
   } else {
     logArray = LogDM(logArray, type)
   }
-  logArray = logArray.filter(e => e.time > to && e.time < from).sort((a, b) => { return order < 0 ? (a.time < b.time) : (a.time > b.time) })
+  logArray = logArray.filter(e => e.time > to && e.time < from).sort((a, b) => { return order * (b.time - a.time) })
   return logArray
 }
 
